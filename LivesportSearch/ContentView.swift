@@ -66,9 +66,14 @@ struct ContentView: View {
                     case .loaded:
                         if results.count > 0 {
                             ForEach(results) { result in
-                                HStack {
-                                    result.smallImage
-                                    Text(result.name)
+                                NavigationLink {
+                                    DetailView(result: result)
+                                } label: {
+                                    HStack {
+                                        result.image
+                                            .frame(width: 20, height: 20)
+                                        Text(result.name)
+                                    }
                                 }
                             }
                         } else {

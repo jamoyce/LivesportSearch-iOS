@@ -8,13 +8,32 @@
 import SwiftUI
 
 struct DetailView: View {
+    let result: Result
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            Section {
+                HStack {
+                    Spacer()
+
+                    result.image
+                        .frame(width: 100, height: 100)
+
+                    Spacer()
+                }
+            }
+
+            Section {
+                Text(result.sport.name)
+                Text(result.defaultCountry.name)
+            }
+        }
+        .navigationTitle(result.name)
     }
 }
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView()
+        DetailView(result: Result.example)
     }
 }

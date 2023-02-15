@@ -27,28 +27,33 @@ struct Result: Codable, Identifiable {
         let path: String?
     }
 
-    var smallImage: some View {
+    var image: some View {
         Group {
             if let path = images.first?.path {
                 AsyncImage(url: URL(string: "https://www.livesport.cz/res/image/data/" + path)) { image in
                     image
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 20, height: 20)
                 } placeholder: {
                     Image(systemName: "person")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 20, height: 20)
                         .opacity(0.5)
                 }
             } else {
                 Image(systemName: "person")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 20, height: 20)
                     .opacity(0.5)
             }
         }
     }
+
+    static let example = Result(
+        id: "AZg49Et9",
+        name: "Djokovic Novak",
+        sport: Sport(name: "Tennis"),
+        defaultCountry: Country(name: "Serbia"),
+        images: [Img]()
+    )
 }
