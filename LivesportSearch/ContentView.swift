@@ -24,6 +24,16 @@ struct ContentView: View {
     @State private var showingFailure = false
     @State private var retrySearch = false
 
+    var sports: [String] {
+        var sports = [String]()
+        for result in results {
+            if !sports.contains(result.sport.name) {
+                sports.append(result.sport.name)
+            }
+        }
+
+        return sports
+    }
 
     var body: some View {
         NavigationStack {
@@ -65,14 +75,19 @@ struct ContentView: View {
                         Text("Loading results...")
                     case .loaded:
                         if results.count > 0 {
-                            ForEach(results) { result in
-                                NavigationLink {
-                                    DetailView(result: result)
-                                } label: {
-                                    HStack {
-                                        result.image
-                                            .frame(width: 20, height: 20)
-                                        Text(result.name)
+                            ForEach(sports, id: \.self) { sport in
+                                Text(sport)
+                                    .font(.headline)
+
+                                ForEach(getResults(for: sport)) { result in
+                                    NavigationLink {
+                                        DetailView(result: result)
+                                    } label: {
+                                        HStack {
+                                            result.image
+                                                .frame(width: 20, height: 20)
+                                            Text(result.name)
+                                        }
                                     }
                                 }
                             }
@@ -144,6 +159,10 @@ struct ContentView: View {
             loadingState = .failed
         }
 
+    }
+
+    func getResults(for sport: String) -> [Result] {
+        results.filter { $0.sport.name == sport }
     }
 
     func getTypeIds() -> String {
