@@ -12,9 +12,9 @@ struct ContentView: View {
         case none, loading, loaded, failed
     }
 
-    let entityTypes = ["Vše", "Soutěže", "Týmy"]
+    let entityTypes = ["All", "Leagues", "Teams"]
     
-    @State private var selectedEntityType = "Vše"
+    @State private var selectedEntityType = "All"
     @State private var searchText = ""
 
     @State private var results = [Result]()
@@ -30,7 +30,7 @@ struct ContentView: View {
             List {
                 Section {
                     HStack {
-                        TextField("Vyhledej si soutěž nebo tým", text: $searchText)
+                        TextField("Search leagues and teams", text: $searchText)
 
                         if searchText != "" {
                             Image(systemName: "xmark")
@@ -40,7 +40,7 @@ struct ContentView: View {
                                 }
                         }
 
-                        Button("Hledat") {
+                        Button("Search") {
                             Task {
                                 await search()
                             }
@@ -60,9 +60,9 @@ struct ContentView: View {
 
                     switch loadingState {
                     case .none:
-                        Text("Zde se zobrazí výsledky vyhledávání.")
+                        Text("Search results will be displayed here.")
                     case .loading:
-                        Text("Načítáme výsledky...")
+                        Text("Loading results...")
                     case .loaded:
                         if results.count > 0 {
                             ForEach(results) { result in
@@ -77,14 +77,14 @@ struct ContentView: View {
                                 }
                             }
                         } else {
-                            Text("Nebyl nalezen žádný výsledek.")
+                            Text("No result found.")
                         }
                     case .failed:
                         EmptyView()
                     }
                 }
             }
-            .navigationTitle("Výsledky")
+            .navigationTitle("Livesport Search")
             .onChange(of: selectedEntityType) { _ in
                 Task {
                     await search()
@@ -99,18 +99,18 @@ struct ContentView: View {
                     retrySearch = false
                 }
             }
-            .alert("Bohužel 🙁", isPresented: $showingLessThan2Chars) {
+            .alert("Sorry 🙁", isPresented: $showingLessThan2Chars) {
                 Button("OK") { }
             } message: {
-                Text("Prosím zadej alespoň dva znaky.")
+                Text("Please enter at least 2 characters.")
             }
-            .alert("Bohužel 🙁", isPresented: $showingFailure) {
+            .alert("Sorry 🙁", isPresented: $showingFailure) {
                 Button("OK") { }
-                Button("Zkusit znovu") {
+                Button("Try again") {
                     retrySearch = true
                 }
             } message: {
-                Text("Při vyhledávání došlo k chybě.")
+                Text("There was an error loading the results.")
             }
         }
     }
@@ -148,9 +148,9 @@ struct ContentView: View {
 
     func getTypeIds() -> String {
         switch selectedEntityType {
-        case "Soutěže":
+        case "Leagues":
             return "1"
-        case "Týmy":
+        case "Teams":
             return "2,3,4"
         default:
             return "1,2,3,4"
