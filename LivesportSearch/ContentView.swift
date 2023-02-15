@@ -80,7 +80,7 @@ struct ContentView: View {
                             Text("No result found.")
                         }
                     case .failed:
-                        EmptyView()
+                        Text("There was an error loading the results.")
                     }
                 }
             }
