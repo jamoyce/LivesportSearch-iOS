@@ -20,6 +20,7 @@ struct ContentView: View {
     @State private var results = [Result]()
     @State private var loadingState = LoadingState.none
 
+    @State private var showingLessThan2Chars = false
     @State private var showingFailure = false
     @State private var retrySearch = false
 
@@ -44,7 +45,6 @@ struct ContentView: View {
                                 await search()
                             }
                         }
-                        .disabled(searchText.count < 2)
                         .buttonStyle(.borderedProminent)
                         .padding(.leading, 5)
                     }
@@ -94,6 +94,11 @@ struct ContentView: View {
                     retrySearch = false
                 }
             }
+            .alert("Bohužel 🙁", isPresented: $showingLessThan2Chars) {
+                Button("OK") { }
+            } message: {
+                Text("Prosím zadej alespoň dva znaky.")
+            }
             .alert("Bohužel 🙁", isPresented: $showingFailure) {
                 Button("OK") { }
                 Button("Zkusit znovu") {
@@ -106,6 +111,11 @@ struct ContentView: View {
     }
 
     func search() async {
+        if searchText.count < 2 {
+            showingLessThan2Chars = true
+            return
+        }
+
         loadingState = .loading
 
         let urlString = "https://s.livesport.services/api/v2/search?type-ids=\(getTypeIds())&project-type-id=1&project-id=602&lang-id=1&q=\(searchText)&sport-ids=1,2,3,4,5,6,7,8,9"
